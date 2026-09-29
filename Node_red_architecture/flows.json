@@ -1,0 +1,346 @@
+[
+    {
+        "id": "7039b37a9ce788cc",
+        "type": "tab",
+        "label": "Flux 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7f298454e27489f5",
+        "type": "debug",
+        "z": "7039b37a9ce788cc",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "d6e05091315f3ee7",
+        "type": "mqtt in",
+        "z": "7039b37a9ce788cc",
+        "name": "",
+        "topic": "v3/tp2-iot-lorawan-youssef@ttn/devices/esp32-lora-wan-youssef/up",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "daa9670842963a98",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 460,
+        "y": 520,
+        "wires": [
+            [
+                "d0937edec83e996e"
+            ]
+        ]
+    },
+    {
+        "id": "d0937edec83e996e",
+        "type": "function",
+        "z": "7039b37a9ce788cc",
+        "name": "function 6",
+        "func": "let data = msg.payload.uplink_message.decoded_payload;\n\nmsg.payload = {\n    temperature: data.temp,\n    humidite: data.hum\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 640,
+        "wires": [
+            [
+                "7f298454e27489f5",
+                "36e41c698105d29a",
+                "cfeaef5cc85341b5"
+            ]
+        ]
+    },
+    {
+        "id": "f48300686f92343e",
+        "type": "ui_chart",
+        "z": "7039b37a9ce788cc",
+        "name": "",
+        "group": "a427d0fdb3010c9c",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Temperature ",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-20",
+        "ymax": "60",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1370,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "36e41c698105d29a",
+        "type": "function",
+        "z": "7039b37a9ce788cc",
+        "name": "function 7",
+        "func": "msg.payload = msg.payload.temperature;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1200,
+        "y": 720,
+        "wires": [
+            [
+                "f48300686f92343e"
+            ]
+        ]
+    },
+    {
+        "id": "cfeaef5cc85341b5",
+        "type": "function",
+        "z": "7039b37a9ce788cc",
+        "name": "function 8",
+        "func": "msg.payload = msg.payload.humidite;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1200,
+        "y": 800,
+        "wires": [
+            [
+                "96a1b803c0dcbc1b"
+            ]
+        ]
+    },
+    {
+        "id": "96a1b803c0dcbc1b",
+        "type": "ui_chart",
+        "z": "7039b37a9ce788cc",
+        "name": "",
+        "group": "a427d0fdb3010c9c",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "humidite",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-20",
+        "ymax": "60",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1360,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c90900d4a8709736",
+        "type": "ui_switch",
+        "z": "7039b37a9ce788cc",
+        "name": "",
+        "label": " Button lora wan",
+        "tooltip": "",
+        "group": "a427d0fdb3010c9c",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "1",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "0",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 200,
+        "y": 980,
+        "wires": [
+            [
+                "f4ec5378e6df5e61"
+            ]
+        ]
+    },
+    {
+        "id": "75a3981e39548c70",
+        "type": "debug",
+        "z": "7039b37a9ce788cc",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "f4ec5378e6df5e61",
+        "type": "function",
+        "z": "7039b37a9ce788cc",
+        "name": "function 9",
+        "func": "let etat = Number(msg.payload);\n\nlet payload = Buffer.from([etat]).toString(\"base64\");\n\nmsg.payload = JSON.stringify({\n    downlinks: [\n        {\n            f_port: 1,\n            frm_payload: payload,\n            priority: \"NORMAL\"\n        }\n    ]\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1060,
+        "wires": [
+            [
+                "75a3981e39548c70",
+                "4bdf900c09187d55"
+            ]
+        ]
+    },
+    {
+        "id": "4bdf900c09187d55",
+        "type": "mqtt out",
+        "z": "7039b37a9ce788cc",
+        "name": "Downlink_TTN_LED",
+        "topic": "v3/tp2-iot-lorawan-youssef@ttn/devices/esp32-lora-wan-youssef/down/push",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "daa9670842963a98",
+        "x": 580,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "daa9670842963a98",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "eu1.cloud.thethings.network",
+        "port": "8883",
+        "tls": "",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "a427d0fdb3010c9c",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "375ca54721e0de94",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "375ca54721e0de94",
+        "type": "ui_tab",
+        "name": "LoraWan",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "3cf5e8b434995def",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
