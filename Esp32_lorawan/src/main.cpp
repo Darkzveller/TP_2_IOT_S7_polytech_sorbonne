@@ -25,6 +25,7 @@ DHT dht(DHTPIN, DHTTYPE);
 #define LED_PIN 2
 
 // Envoie une commande AT et affiche la reponse du LoRa-E5
+
 bool envoyerCommande(String commande, unsigned long timeout = 2000)
 {
   // Vide les anciennes donnees dans le buffer UART
@@ -76,6 +77,7 @@ bool envoyerCommande(String commande, unsigned long timeout = 2000)
 
   return true;
 }
+
 String lireReponseLoRa()
 {
   String reponse = "";
