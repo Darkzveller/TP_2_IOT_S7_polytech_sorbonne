@@ -1,4 +1,13 @@
 #include <Arduino.h>
+/*
+cd /d "C:\Program Files\mosquitto"
+mosquitto.exe -c "C:\Program Files\mosquitto\mosquitto.conf" -v
+mosquitto_sub.exe -h localhost -p 1883 -t "esp32/#" -v
+
+mosquitto_pub.exe -h localhost -p 1883 -t "esp32/#" -v
+
+*/
+
 // Capteur de temperature et d'humidite DHT11
 // https://tutoduino.fr/
 // Copyleft 2020
@@ -12,26 +21,8 @@
 // Il faut passer en parametre du constructeur
 // de l'objet la broche et le type de capteur
 DHT dht(DHTPIN, DHTTYPE);
-// void setup()
-// {
-//   Serial.begin(9600);
-//   Serial2.begin(9600);
 
-//   delay(1000);
-
-//   Serial2.println("AT+ID=AppEUI,0000000000000000");
-
-//   Serial2.println("AT+ID=DevEUI,70B3D57ED007922E");
-//   Serial2.println("AT+KEY=APPKEY,AF083CDC5BE612AAEB359989124B096B");
-
-//   Serial2.println("AT+MODE=LWOTAA");//  set OTAA join mode
-//   Serial2.println("AT+DR=DR3"); //  change speed for SF9 BW125
-
-//   Serial2.println("AT+MSGHEX=01020304");
-
-//   // Initialise la capteur DHT11
-//   dht.begin();
-// }
+#define LED_PIN 2
 
 // Envoie une commande AT et affiche la reponse du LoRa-E5
 bool envoyerCommande(String commande, unsigned long timeout = 2000)
@@ -85,9 +76,37 @@ bool envoyerCommande(String commande, unsigned long timeout = 2000)
 
   return true;
 }
+String lireReponseLoRa()
+{
+  String reponse = "";
+  unsigned long debut = millis();
 
+  while (millis() - debut < 5000)
+  {
+    while (Serial2.available())
+    {
+      char c = Serial2.read();
+
+      reponse += c;
+
+      Serial.write(c);
+    }
+  }
+
+  return reponse;
+}
 void setup()
 {
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_PIN, LOW);
+  delay(1000);
+  digitalWrite(LED_PIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_PIN, LOW);
+  delay(1000);
+
   Serial.begin(9600);
 
   Serial2.begin(9600);
@@ -108,14 +127,14 @@ void setup()
 
   envoyerCommande("AT+ID=AppEUI,0000000000000000");
   envoyerCommande("AT+ID=DevEUI,70B3D57ED007922E");
-  envoyerCommande("AT+KEY=APPKEY,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+  envoyerCommande("AT+KEY=APPKEY,AF083CDC5BE612AAEB359989124B096B");
 
   envoyerCommande("AT+MODE=LWOTAA");
   envoyerCommande("AT+DR=DR3");
 
   envoyerCommande("AT+JOIN");
 
-  delay(5000);
+  // delay(5000);
 
   envoyerCommande("AT+MSGHEX=01020304");
 
@@ -143,7 +162,22 @@ void loop()
   Serial.println(message);
 
   envoyerCommande("AT+MSGHEX=" + String(message));
+  String reponse = lireReponseLoRa();
+  Serial.print("Message recu :  " + reponse);
+  Serial.println();
+  if (reponse.indexOf("RX: \"01\"") != -1)
+  {
+    digitalWrite(LED_PIN, HIGH);
 
+    Serial.println("LED ALLUMEE");
+  }
+
+  if (reponse.indexOf("RX: \"00\"") != -1)
+  {
+    digitalWrite(LED_PIN, LOW);
+
+    Serial.println("LED ETEINTE");
+  }
   // Attend 10 secondes avant de reboucler
-  delay(1000);
+  delay(10000 / 10);
 }
